@@ -10,15 +10,20 @@ class TestInterface(unittest.TestCase):
     X_train: ntp.NDArray
     y_train: ntp.NDArray
 
+    x_test: float
+
     def setUp(self) -> None:
-        self.X_train = np.linspace(-1, 1)
-        self.y_train = np.sign(self.X_train)
+        self.X_train = np.linspace(-1, 1, 4)[:, None]
+        self.y_train = np.sign(self.X_train).squeeze()
+
+        self.x_test = 0
 
     def test_base(self) -> None:
-        learner = jit.BaseClassifier()
+        learner = jit.BaseClassifier(1, 4)
 
         learner.fit(self.X_train, self.y_train)
 
-        y_pred = learner.predict(self.X_train)
+        y_interval = learner.predict(self.x_test)
 
-        self.assertAlmostEquals(y_pred, self.y_train)
+        self.assertEqual(len(y_interval), 2)
+        self.assertAlmostEquals(y_interval, (0, 0))
