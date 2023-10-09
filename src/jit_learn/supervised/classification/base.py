@@ -6,6 +6,8 @@ from typing import Sequence
 
 class BaseClassifier(object):
     def __init__(self, xdim: int, memory: int) -> None:
+        self.xdim = xdim
+        self.memory = memory
         w = self.weights = cp.Variable(xdim)
         e = self.errors = cp.Variable(memory)
         p = self.preds = cp.Variable(memory)
@@ -27,7 +29,10 @@ class BaseClassifier(object):
 
     def _sample(self, x: NDArray | None = None) -> NDArray:
         if x is None:
-            return self.X, self.y
+            idx = np.arange(self.X.shape[0])
+            np.random.shuffle(idx)
+            idx = idx[:self.memory]
+            return self.X[idx], self.y[idx]
 
         raise NotImplementedError("conditional sampling is not implemented.")
 
@@ -42,16 +47,27 @@ class BaseClassifier(object):
         self.labels.value = y
         self.param.value = 1
 
-        self.problem.solve()
+        try:
+            self.problem.solve()
+        except Exception as e:
+            print(X)
+            print(y)
+            raise e
 
         w = self.weights.value
         e = self.errors.value
 
+        is_positive = y > 0
+        is_negative = y < 0
+
+        Xp_size = np.sum(is_positive)
+        Xn_size = np.sum(is_negative)
+
         Xp, Xn = X[y > 0], X[y < 0]
         ep, en = e[y > 0], e[y < 0]
 
-        lower_bound = (1 - ep - Xp @ w).max()
-        upper_bound = (en - 1 - Xn @ w).min()
+        lower_bound = (1 - ep - Xp @ w).max() if Xp_size > 0 else -1
+        upper_bound = (en - 1 - Xn @ w).min() if Xn_size > 0 else 1
 
         return np.asarray([lower_bound, upper_bound])
 
