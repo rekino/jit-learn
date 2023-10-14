@@ -3,7 +3,7 @@ from typing import Sequence
 
 
 class Distribution:
-    def sample(self, count: int, **kwargs) -> (NDArray, NDArray):
+    def sample(self, count: int, **kwargs) -> (NDArray, NDArray | None):
         raise NotImplementedError()
 
     @property
