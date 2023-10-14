@@ -1,32 +1,17 @@
 import numpy as np
 from numpy.typing import NDArray
-from typing import Sequence
 
 from .base import Distribution
 
 
 class EmpiricalDistribution(Distribution):
-    def __init__(self, X: NDArray, y: NDArray | None = None) -> None:
-        self.X = X
-        self.y = y
+    def fit(self, data: NDArray) -> None:
+        self.data = data
 
-    def sample(self, count: int, **kwargs) -> NDArray:
-        size = self.X.shape[0]
-        idx = np.arange(size)
+    def sample(self, size: int, **kwargs) -> NDArray:
+        count = self.data.shape[0]
+        idx = np.arange(count)
         np.random.shuffle(idx)
+        idx = idx[:size]
 
-        if self.y is None:
-            return self.X[idx]
-
-        return self.X[idx], self.y[idx]
-
-    @property
-    def x_shape(self) -> Sequence[int]:
-        return self.X.shape[1:]
-
-    @property
-    def y_shape(self) -> Sequence[int]:
-        if self.y is None:
-            return None
-
-        return self.y.shape[1:]
+        return self.data[idx]

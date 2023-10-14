@@ -3,12 +3,12 @@ import cvxpy as cp
 from numpy.typing import NDArray
 from typing import Sequence
 
-from .base import LearningRule
+from .base import Model
 
 
-class LinearSVC(LearningRule):
+class LinearSVC(Model):
     def __init__(self, sample_size: int) -> None:
-        super(LearningRule, self).__init__()
+        super(Model, self).__init__()
 
         self.sample_size = sample_size
         embeding_dim = self.embeding_out_shape
