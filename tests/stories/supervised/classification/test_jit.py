@@ -3,7 +3,7 @@ import numpy.typing as ntp
 
 import numpy as np
 
-import src.jit_learn.supervised.classification.base as jit
+import jit_learn.base as jit
 
 
 class TestInterface(unittest.TestCase):
