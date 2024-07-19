@@ -10,7 +10,7 @@ class TestSchwartzNeuron(unittest.TestCase):
         rho = SchwartzNeuron(2)
 
         self.assertIsNotNone(rho)
-    
+
     def test_forward(self) -> None:
         rho = SchwartzNeuron(2)
 
@@ -18,7 +18,7 @@ class TestSchwartzNeuron(unittest.TestCase):
         out = rho(x)
 
         self.assertEquals(out.shape, (3, 1))
-    
+
     def test_laplacian(self) -> None:
         rho = SchwartzNeuron(2)
 

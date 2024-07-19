@@ -9,7 +9,9 @@ from .test_function import SchwartzNeuron
 
 
 class GeneralizaedSLP(nn.Module):
-    def __init__(self, in_dim: int, hidden_dim: int, out_dim: int, activation=F.tanh, deg=10) -> None:
+    def __init__(
+        self, in_dim: int, hidden_dim: int, out_dim: int, activation=F.tanh, deg=10
+    ) -> None:
         super().__init__()
 
         self.in_dim = in_dim
@@ -28,12 +30,12 @@ class GeneralizaedSLP(nn.Module):
         self.u = torch.Tensor(u) * np.sqrt(2)
         self.c = torch.Tensor(c)
 
-        Ui, Uj = torch.meshgrid(self.u, self.u, indexing='xy')
+        Ui, Uj = torch.meshgrid(self.u, self.u, indexing="xy")
         self.U = torch.stack([Ui, Uj], dim=-1)
 
-        Ci, Cj = torch.meshgrid(self.c, self.c, indexing='xy')
+        Ci, Cj = torch.meshgrid(self.c, self.c, indexing="xy")
         self.C = Ci * Cj
-    
+
     def val(self, x: torch.Tensor) -> torch.Tensor:
         out = self.activation(x @ self.W + self.b)
 
@@ -60,7 +62,7 @@ class GeneralizaedSLP(nn.Module):
         out = torch.sum(out * S, dim=(0, 1)) / np.pi
 
         return out @ self.v + self.v0 * phi_mean
-    
+
     def laplacian(self, phi: SchwartzNeuron) -> torch.Tensor:
         r, R = self._qr(phi.w)
 
@@ -69,7 +71,9 @@ class GeneralizaedSLP(nn.Module):
         s = phi.activation(self.u * r + phi.b)
         s_x = 1 - s**2
         s_xx = 2 * (s**3 - s)
-        lap_phi_mean = self.c * (s_xx * r**2 - 2 * s_x * r * self.u + s * (self.u**2 - 1))
+        lap_phi_mean = self.c * (
+            s_xx * r**2 - 2 * s_x * r * self.u + s * (self.u**2 - 1)
+        )
         lap_phi_mean = torch.sum(lap_phi_mean) / np.sqrt(np.pi)
 
         S = self.activation(self.U @ R + self.b)
@@ -94,7 +98,7 @@ class GeneralizaedSLP(nn.Module):
 
 #         out = ann.val(X) * rho(X)
 #         return np.squeeze(out.detach().numpy())
-    
+
 #     def integrand2(x, y):
 #         X = np.array([x, y])[None, :]
 #         X = torch.Tensor(X)

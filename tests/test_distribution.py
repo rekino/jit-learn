@@ -11,15 +11,15 @@ class TestGeneralizaedSLP(unittest.TestCase):
         gslp = GeneralizaedSLP(2, 5, 3)
 
         self.assertIsNotNone(gslp)
-    
+
     def test_val(self) -> None:
         gslp = GeneralizaedSLP(2, 5, 3)
 
         x = torch.randn(4, 2)
         out = gslp.val(x)
-        
+
         self.assertEquals(out.shape, (4, 3))
-    
+
     def test_qr(self) -> None:
         gslp = GeneralizaedSLP(2, 5, 3)
 
@@ -28,7 +28,7 @@ class TestGeneralizaedSLP(unittest.TestCase):
 
         self.assertAlmostEqual(r, torch.linalg.norm(w))
         self.assertEquals(R.shape, (2, 5))
-    
+
     def test_forward(self) -> None:
         gslp = GeneralizaedSLP(2, 5, 3)
 
@@ -38,8 +38,8 @@ class TestGeneralizaedSLP(unittest.TestCase):
         rho.activation = torch.relu
 
         out = gslp(rho)
-        self.assertEquals(out.shape, (3, ))
-    
+        self.assertEquals(out.shape, (3,))
+
     def test_laplacian(self) -> None:
         gslp = GeneralizaedSLP(2, 5, 3)
 
@@ -49,4 +49,4 @@ class TestGeneralizaedSLP(unittest.TestCase):
         rho.activation = torch.relu
 
         out = gslp.laplacian(rho)
-        self.assertEquals(out.shape, (3, ))
+        self.assertEquals(out.shape, (3,))
