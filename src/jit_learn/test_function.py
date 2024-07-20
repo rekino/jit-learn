@@ -34,3 +34,6 @@ class SchwartzNeuron(nn.Module):
         out *= torch.exp(-x_x / 2) * self.norm
 
         return out
+    
+    def norm(self) -> torch.Tensor:
+        raise NotImplementedError()
